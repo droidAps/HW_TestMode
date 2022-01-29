@@ -1,0 +1,1 @@
+# Project TestMode [![Build status](https://ci.appveyor.com/api/projects/status/x48ejrf5ve5tivea?svg=true)](https://ci.appveyor.com/project/droidAps/hw-testmode)
