@@ -9,7 +9,6 @@ import lombok.*;
 
 import java.util.Locale;
 
-import static com.codeborne.selenide.Selenide.$;
 import static io.restassured.RestAssured.given;
 
 public class DataGenerator {
@@ -29,16 +28,13 @@ public class DataGenerator {
         private Registration() {
         }
 
-        public static RegistrationInfo generateUser(boolean isActive) {
-            String status = " ";
-            if (isActive == true) {
-                status = "active";
-            } else {
-                status = "blocked";
-            }
+         // метод на "вход" принимает только 2 значения переменной status:
+         // "active" - пользователь активен
+         // "blocked" - пользователь заблокирован
+         public static RegistrationInfo generateUser(String status) {
             return new RegistrationInfo(
                     faker.name().firstName(),
-                    faker.internet().password(6, 10),
+                    faker.internet().password(5, 7),
                     status);
         }
 
@@ -54,52 +50,18 @@ public class DataGenerator {
 
         //цель метода - создание невалидного пароля для входа в систему
         public static RegistrationInfo generateWrongPassword(RegistrationInfo user) {
-            if (user.password != "wrongPassword") {
                 return new RegistrationInfo(
                         user.login,
-                        "wrongPassword",
+                        faker.internet().password(8, 10),
                         user.status);
-            } else {
-                return new RegistrationInfo(
-                        user.login,
-                        "passwordWrong",
-                        user.status);
-            }
         }
 
         //цель метода - создание невалидного логина для входа в систему
         public static RegistrationInfo generateWrongLogin(RegistrationInfo user) {
-            if (user.login != "wrongLogin") {
                 return new RegistrationInfo(
-                        "wrongLogin",
+                        faker.name().username(),
                         user.password,
                         user.status);
-            } else {
-                return new RegistrationInfo(
-                        "loginWrong",
-                        user.password,
-                        user.status);
-            }
-        }
-
-        public static RegistrationInfo changeUserStatus(RegistrationInfo user) {
-            if (user.status == "active") {
-                return new RegistrationInfo(
-                        user.login,
-                        user.password,
-                        "blocked");
-            } else {
-                return new RegistrationInfo(
-                        user.login,
-                        user.password,
-                        "active");
-            }
-        }
-
-        public static void authorization(RegistrationInfo user) {
-            $("[data-test-id='login'] input").setValue(user.getLogin());
-            $("[data-test-id='password'] input").setValue(user.getPassword());
-            $("[data-test-id='action-login']").click();
         }
     }
 
